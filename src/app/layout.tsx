@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko" className={`${pretendard.variable} ${tenada.variable}`}>
-      <body className="flex min-h-dvh flex-col">
+      <body className="flex min-h-dvh flex-col bg-gray-50">
         <Providers>
           <MainNav />
           {/* 메인이 남는 공간만 차지 = 헤더+푸터 있어도 100dvh 초과 안 함 */}

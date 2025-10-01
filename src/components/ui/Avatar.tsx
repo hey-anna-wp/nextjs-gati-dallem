@@ -1,8 +1,8 @@
-import Image from 'next/image';
-import { cn } from '@/lib/utils';
+import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 export interface UserProfile {
-  teamId: number;
+  teamId: string | number;
   id: number;
   email: string;
   name: string;
@@ -14,35 +14,34 @@ export interface UserProfile {
 
 interface AvatarProps {
   userProfile?: UserProfile;
-  size?: 'small' | 'medium' | 'large' | 'x-large';
-  type?: 'female' | 'male';
+  size?: "small" | "medium" | "large" | "x-large";
+  type?: "female" | "male";
   className?: string;
 }
 
-const DEFAULT_AVATAR_SIZE = 'medium';
-const DEFAULT_AVATAR_TYPE = 'female';
+const DEFAULT_AVATAR_SIZE = "medium";
+const DEFAULT_AVATAR_TYPE = "female";
 
 // Figma 디자인에 맞춘 정확한 크기
 const AVATAR_SIZE_CLASSES = {
-  small: "w-10 h-10",      // 40px
+  small: "w-10 h-10", // 40px
   medium: "w-[54px] h-[54px]", // 54px (정확한 Figma 스펙)
-  large: "w-16 h-16",      // 64px
-  'x-large': "w-[114px] h-[114px]" // 114px (정확한 Figma 스펙)
+  large: "w-16 h-16", // 64px
+  "x-large": "w-[114px] h-[114px]", // 114px (정확한 Figma 스펙)
 } as const;
 
-export default function Avatar({ 
-  userProfile, 
-  size = DEFAULT_AVATAR_SIZE, 
+export default function Avatar({
+  userProfile,
+  size = DEFAULT_AVATAR_SIZE,
   type = DEFAULT_AVATAR_TYPE,
-  className 
+  className,
 }: AvatarProps) {
-
   return (
-    <div 
+    <div
       className={cn(
-        "relative rounded-full bg-white border border-gray-300 overflow-hidden",
+        "relative overflow-hidden rounded-full border border-gray-300 bg-white",
         AVATAR_SIZE_CLASSES[size],
-        className
+        className,
       )}
     >
       <Image

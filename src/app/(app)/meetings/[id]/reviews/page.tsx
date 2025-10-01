@@ -1,4 +1,4 @@
-type Props = { params: { id: string } };
-export default function Page({ params }: Props) {
-  return <main className="p-6">모임 리뷰 목록 — 모임 ID: {params.id}</main>;
+/* build를 위해서 이게 필요 */
+export default function CreateMeetingPage() {
+  return <div>회의 생성</div>;
 }

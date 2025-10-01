@@ -9,12 +9,13 @@ import { CompletedChip, ConfirmChip } from "../ui/Chip";
 /**
  * CCP로 직접 구현하는 모임 카드 컴포넌트
  */
-export function Card({ children }: { children?: React.ReactNode }) {
+export function Card({ children, className }: { children?: React.ReactNode; className?: string }) {
   return (
     <article
       className={cn(
         "relative overflow-hidden rounded-3xl bg-white hover:drop-shadow-sm",
         "md:items-upper md:flex md:min-w-[650px] md:justify-start md:gap-6 md:rounded-4xl md:p-6 md:pr-9",
+        className,
       )}
       aria-label="모임 목록 아이템"
     >
@@ -38,8 +39,10 @@ function CardImage({ image }: { image?: string }) {
 Card.Image = CardImage;
 
 /** 모임 상세 정보 영역 */
-function CardDetail({ children }: { children?: React.ReactNode }) {
-  return <div className="flex-2 bg-white p-4 pb-5 md:px-0 md:py-2">{children}</div>;
+function CardDetail({ children, className }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <div className={cn("flex-2 bg-white p-4 pb-5 md:px-0 md:py-2", className)}>{children}</div>
+  );
 }
 Card.Detail = CardDetail;
 
