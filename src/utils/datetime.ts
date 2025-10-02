@@ -5,8 +5,17 @@ import { format } from "date-fns";
  * @param datetime
  * @returns [date, time]
  */
-export const formatDateTime = (datetime: string) => {
+export const formatDateAndTime = (datetime: string) => {
   const date = format(datetime, "MM월 dd일");
   const time = format(datetime, "HH:mm");
   return [date, time];
+};
+/**
+ * 날짜 포맷터
+ * @param datetime
+ * @returns [date, time]
+ */
+export const formatDate = (datetime: string) => {
+  const datetimeString = format(datetime, "yyyy.MM.dd");
+  return datetimeString;
 };

@@ -6,7 +6,7 @@ const CHIP_VARIANTS = {
   tag: "gap-1 pr-2 pl-1 rounded-xl bg-[rgba(255,133,224,0.2)] text-xs md:text-sm font-semibold text-pink-500",
   info: "px-2 py-0.5 rounded-xl border-1 border-slate-100 bg-white text-xs md:text-sm font-medium text-slate-500",
   active: "px-4 py-2 rounded-2xl bg-slate-700 text-base font-medium text-white",
-  default: "px-4 py-2 rounded-2xl bg-slate-50 text-base font-medium text-slate-700",
+  default: "px-4 py-2 rounded-2xl bg-slate-100 text-base font-medium text-slate-700",
   /** 이용 예정 */
   brand: "px-3 py-1.5 rounded-3xl bg-purple-100 text-sm font-semibold text-purple-600",
   /** 개설 대기 */

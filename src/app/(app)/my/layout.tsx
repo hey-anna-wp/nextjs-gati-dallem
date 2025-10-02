@@ -6,8 +6,8 @@ export default function MyPageLayout({ children }: { children: React.ReactNode }
   return (
     <div
       className={cn(
-        "flex flex-col items-start justify-stretch gap-6",
-        "md:flex-center",
+        "md:flex-center flex flex-col items-start justify-stretch gap-6",
+        "my-10.5 px-4 md:my-8 md:px-6 lg:my-12 lg:p-0",
         "lg:mx-auto lg:max-w-[1280px] lg:flex-row lg:gap-10",
       )}
     >
@@ -22,8 +22,10 @@ export default function MyPageLayout({ children }: { children: React.ReactNode }
         </h2>
         <ProfileCard />
       </aside>
-      <main className="flex w-full flex-col items-start justify-stretch gap-4">
-        <MyPageTab />
+      <main className="flex w-full flex-col items-start justify-stretch gap-6">
+        <div className="flex w-full justify-stretch lg:px-4">
+          <MyPageTab />
+        </div>
         {children}
       </main>
     </div>

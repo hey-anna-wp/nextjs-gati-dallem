@@ -3,65 +3,66 @@
   * {
     border-color: var(--color-gray-200);
   }
-  
+
   html {
     scroll-behavior: smooth;
   }
-  
+
   body {
-    @apply text-gray-900 bg-white antialiased;
-    font-feature-settings: 'cv11', 'ss01';
+    @apply text-gray-900 antialiased;
+    background-color: #f8f8f8;
+    font-feature-settings: "cv11", "ss01";
     font-variant-numeric: tabular-nums;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  
+
   /* Dark Mode Styles */
   .dark body {
-    @apply text-gray-100 bg-gray-900;
+    @apply bg-gray-900 text-gray-100;
   }
-  
+
   /* Text Selection Styles */
   ::selection {
     @apply bg-green-100 text-green-900;
   }
-  
+
   .dark ::selection {
     @apply bg-green-900 text-green-100;
   }
-  
+
   /* Focus Styles */
   :focus-visible {
-    @apply outline-none ring-2 ring-green-500 ring-offset-2;
+    @apply ring-2 ring-green-500 ring-offset-2 outline-none;
   }
-  
+
   /* Scrollbar Styling */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
-  
+
   ::-webkit-scrollbar-track {
     @apply bg-gray-100;
   }
-  
+
   ::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 rounded-full;
+    @apply rounded-full bg-gray-300;
   }
-  
+
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-gray-400;
   }
-  
+
   /* Dark Mode Scrollbar */
   .dark ::-webkit-scrollbar-track {
     @apply bg-gray-800;
   }
-  
+
   .dark ::-webkit-scrollbar-thumb {
     @apply bg-gray-600;
   }
-  
+
   .dark ::-webkit-scrollbar-thumb:hover {
     @apply bg-gray-500;
   }

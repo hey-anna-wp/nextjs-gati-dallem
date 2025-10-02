@@ -1,7 +1,7 @@
 import { Card } from "@/components/common/Card";
 import ReservedCardItem from "@/components/my/bookings/ReservedCardItem";
 import CreatedCardItem from "@/components/my/hosted/CreatedCardItem";
-import ReviewCardItem from "@/components/my/reviews/ReviewCardItem";
+import UnreviewedCardItem from "@/components/my/reviews/UnreviewedCardItem";
 import { ChipInfo } from "@/components/ui/Chip";
 import type { Meta, StoryObj } from "@storybook/react";
 
@@ -68,9 +68,9 @@ export const CustomCardExample: Story = {
 export const CardReserved: Story = {
   render: () => <ReservedCardItem {...mockData} />,
 };
-/** 마이페이지 나의 리뷰 카드 컴포넌트 */
-export const CardReview: Story = {
-  render: () => <ReviewCardItem {...mockData} />,
+/** 마이페이지 나의 리뷰 - 작성 가능한 리뷰 카드 컴포넌트 */
+export const CardUnreviewed: Story = {
+  render: () => <UnreviewedCardItem {...mockData} />,
 };
 /** 마이페이지 내가 만든 모임 카드 컴포넌트 */
 export const CardCreatedGathering: Story = {
