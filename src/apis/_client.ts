@@ -5,6 +5,7 @@ import { tokenStore } from "@/utils/auth/token.store";
 import { getErrorMessage } from "./_errorMessage";
 import { API_BASE_URL, TEAM_ID } from "@/configs/commonConfig";
 import { authActions } from "@/store/authStore";
+import { showGlobalLoading, hideGlobalLoading } from "@/utils/loadingDom";
 
 interface ReqOptionsType<T> extends RequestInit {
   /** 응답 Zod 스키마 (성공 응답) */
@@ -13,6 +14,8 @@ interface ReqOptionsType<T> extends RequestInit {
   emptyResponse?: boolean;
   /** 쿼리 스트링 파라미터 */
   query?: Record<string, unknown>;
+  /** 전역 로딩 오버레이 사용 여부 (기본 true) */
+  useLoading?: boolean;
 }
 
 /** 공통 에러 */
@@ -35,8 +38,6 @@ export class HttpApiError extends Error {
  */
 
 export class ApiClient {
-  // private static readonly BASE_URL = "https://fe-adv-project-together-dallaem.vercel.app";
-  // private static readonly TEAM_ID = "11-6";
   /** 환경변수 기반 (commonConfig) */
   private static readonly BASE_URL = (API_BASE_URL || "").replace(/\/+$/, ""); // 뒤 슬래시 제거
   private static readonly TEAM_ID = TEAM_ID;
@@ -78,75 +79,88 @@ export class ApiClient {
 
   /** 공통 요청 래퍼 (Zod로 결과 파싱) */
   private async _request<T>(path: string, options: ReqOptionsType<T> = {}): Promise<T> {
-    const { responseSchema, emptyResponse, query, ...init } = options;
+    const { responseSchema, emptyResponse, query, useLoading = true, ...init } = options;
 
     // URL + 쿼리 (이중 슬래시 방지)
     const normalizedPath = path.startsWith("/") ? path : `/${path}`;
     const url = `${ApiClient.BASE_URL}/${ApiClient.TEAM_ID}${normalizedPath}${this._buildQuery(query)}`;
 
-    // 공통 헤더 (최신 토큰 우선)
-    const headers = this.buildHeaders(init.headers, init.body);
+    const canUseDom = typeof window !== "undefined";
 
-    // fetch (캐시 방지)
-    const resp = await fetch(url, { ...init, headers, cache: "no-store" });
+    const method = (init.method || "GET").toUpperCase();
 
-    // 에러 응답 처리
-    if (!resp.ok) {
-      let raw: unknown;
-      try {
-        raw = await resp.json();
-      } catch {
+    // GET 요청(페이지 데이터 등)은 스켈레톤 처리 → 전역 스피너 OFF
+    // POST / PUT / DELETE 요청(저장, 삭제, 로그인 등)은 전역 스피너 ON
+    const shouldGlobalLoad = useLoading && method !== "GET";
+    if (canUseDom && shouldGlobalLoad) showGlobalLoading();
+
+    try {
+      // 공통 헤더 (최신 토큰 우선)
+      const headers = this.buildHeaders(init.headers, init.body);
+      // fetch (캐시 방지)
+      const resp = await fetch(url, { ...init, headers, cache: "no-store" });
+
+      // 에러 응답 처리
+      if (!resp.ok) {
+        let raw: unknown;
+        try {
+          raw = await resp.json();
+        } catch {
+          const uiMsg = getErrorMessage(resp.status);
+          throw new HttpApiError(resp.status, uiMsg);
+        }
+        const parsed = ApiErrorSchema.safeParse(raw);
+        if (parsed.success) {
+          const { code, message, parameter } = parsed.data as any;
+          const uiMsg = getErrorMessage(resp.status, code, message);
+
+          if (resp.status === 401 && !/\/auths\/(signin|signup)/.test(normalizedPath)) {
+            try {
+              await authActions.clear();
+            } catch {}
+            if (typeof window !== "undefined") {
+              const redirect = encodeURIComponent(
+                window.location.pathname + window.location.search + window.location.hash,
+              );
+              // [DEV ONLY] 개발 중 401 리다이렉트 테스트 로그
+              // - 실제 배포 시 제거 가능
+              if (process.env.NODE_ENV === "development") {
+                console.info("[apiClient] 401 → redirect to /signin", { path, code, redirect });
+              }
+              window.location.replace(`/signin?redirect=${redirect}`);
+            }
+            // 브라우저/SSR 모두 흐름 종료
+            return Promise.reject(new HttpApiError(401, uiMsg, code, parameter));
+          }
+          throw new HttpApiError(resp.status, uiMsg, code, parameter);
+        }
+
+        // 알 수 없는 포맷
         const uiMsg = getErrorMessage(resp.status);
         throw new HttpApiError(resp.status, uiMsg);
       }
-      const parsed = ApiErrorSchema.safeParse(raw);
-      if (parsed.success) {
-        const { code, message, parameter } = parsed.data as any;
-        const uiMsg = getErrorMessage(resp.status, code, message);
 
-        if (resp.status === 401 && !/\/auths\/(signin|signup)/.test(path)) {
-          try {
-            await authActions.clear();
-          } catch {}
-          if (typeof window !== "undefined") {
-            const redirect = encodeURIComponent(
-              window.location.pathname + window.location.search + window.location.hash,
-            );
-            // [DEV ONLY] 개발 중 401 리다이렉트 테스트 로그
-            // - 실제 배포 시 제거 가능
-            if (process.env.NODE_ENV === "development") {
-              console.info("[apiClient] 401 → redirect to /signin", { path, code, redirect });
-            }
-            window.location.replace(`/signin?redirect=${redirect}`);
-          }
-          // 브라우저/SSR 모두 흐름 종료
-          return Promise.reject(new HttpApiError(401, uiMsg, code, parameter));
-        }
-        throw new HttpApiError(resp.status, uiMsg, code, parameter);
+      // No Content 등 처리
+      // 주의: chunked 전송의 경우 Content-Length가 없을 수 있음.
+      if (emptyResponse || resp.status === 204 || resp.headers.get("Content-Length") === "0")
+        return undefined as T;
+
+      // 성공 응답 파싱
+      const data = await resp.json();
+      if (!responseSchema) return data as T;
+
+      // 스키마 미스매치 시 바로 에러
+      const parsed = responseSchema.safeParse(data);
+      if (!parsed.success) {
+        // 필요 시 디버깅: parsed.error.issues
+        parsed.error?.issues.forEach((i) => console.log(i));
+        throw new HttpApiError(500, "Response schema validation failed");
       }
-
-      // 알 수 없는 포맷
-      const uiMsg = getErrorMessage(resp.status);
-      throw new HttpApiError(resp.status, uiMsg);
+      return parsed.data as T;
+    } finally {
+      // 성공/실패 무관 전역 로딩 off
+      if (canUseDom && shouldGlobalLoad) hideGlobalLoading();
     }
-
-    // No Content 등 처리
-    // 주의: chunked 전송의 경우 Content-Length가 없을 수 있음.
-    if (emptyResponse || resp.status === 204 || resp.headers.get("Content-Length") === "0")
-      return undefined as T;
-
-    // 성공 응답 파싱
-    const data = await resp.json();
-    if (!responseSchema) return data as T;
-
-    // 스키마 미스매치 시 바로 에러
-    const parsed = responseSchema.safeParse(data);
-    if (!parsed.success) {
-      // 필요 시 디버깅: parsed.error.issues
-      parsed.error?.issues.forEach((i) => console.log(i));
-      throw new HttpApiError(500, "Response schema validation failed");
-    }
-    return parsed.data as T;
   }
 
   /** GET 헬퍼 */

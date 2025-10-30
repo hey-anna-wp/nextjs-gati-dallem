@@ -212,7 +212,6 @@ const SignupForm = ({ redirect = "/signin" }: Props) => {
         onChange={(e) => handleChange("pw", e.target.value)}
         invalid={!!errors.pw}
         errorMessage={errors.pw}
-        aria-describedby="pw-error"
         autoComplete="new-password"
         className="bg-white ring-1 ring-slate-200 hover:ring-[#5865F2]/40 focus-visible:ring-2 focus-visible:ring-[#5865F2]"
       />

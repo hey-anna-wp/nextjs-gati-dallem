@@ -44,7 +44,7 @@ export const AUTH_ERROR_MESSAGES = {
     USER_NOT_FOUND: "가입되지 않은 계정이에요.",
     EMAIL_EXISTS: "이미 사용 중인 이메일이에요.", // 서버 중복 응답 폴백
     VALIDATION_ERROR: "입력값을 다시 확인해 주세요.",
-    TOKEN_EXPIRED: "세션이 만료되었습니다. 다시 로그인해 주세요.",
+    TOKEN_EXPIRED: "세션이 만료되었어요. 다시 로그인해 주세요.",
   },
 
   // 공통 배너/토스트/성공 문구 등
