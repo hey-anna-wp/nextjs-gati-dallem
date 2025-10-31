@@ -12,6 +12,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/Calendar";
 import { format } from "date-fns";
+import { ko } from "date-fns/locale/ko";
 import { GatheringMapper } from "@/types/gathering";
 
 export interface MeetingFilters {
@@ -175,10 +176,9 @@ export default function FilterBar({ value, onChange, className }: FilterBarProps
                   mode="single"
                   selected={selectedDate}
                   onSelect={handleDateSelect}
-                  locale={require("date-fns/locale/ko").ko}
+                  locale={ko}
                   formatters={{
-                    formatWeekdayName: (date: Date) =>
-                      format(date, "EEEEE", { locale: require("date-fns/locale/ko").ko }),
+                    formatWeekdayName: (date: Date) => format(date, "EEEEE", { locale: ko }),
                   }}
                 />
                 <div className="flex gap-2 p-3">
