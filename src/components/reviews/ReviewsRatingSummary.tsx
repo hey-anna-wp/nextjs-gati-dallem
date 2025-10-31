@@ -13,7 +13,7 @@ function ScoreBar({ label, count, total, isHighlighted = false }: ScoreBarProps)
   return (
     <div className="flex items-center gap-2 md:gap-2">
       <span
-        className={`text-xs font-semibold leading-4 md:text-base md:leading-6 ${
+        className={`text-xs leading-4 font-semibold md:text-base md:leading-6 ${
           isHighlighted ? "text-purple-600" : "text-slate-500"
         }`}
       >
@@ -22,13 +22,13 @@ function ScoreBar({ label, count, total, isHighlighted = false }: ScoreBarProps)
       <div className="relative h-1.5 flex-1 overflow-hidden rounded-md bg-gray-200 md:h-2">
         {percentage > 0 && (
           <div
-            className="absolute left-0 top-0 h-full rounded-md bg-gradient-to-r from-purple-400 to-pink-400 transition-all"
+            className="absolute top-0 left-0 h-full rounded-md bg-gradient-to-r from-purple-400 to-pink-400 transition-all"
             style={{ width: `${percentage}%` }}
           />
         )}
       </div>
       <span
-        className={`text-xs font-semibold leading-4 md:text-base md:leading-6 ${
+        className={`text-xs leading-4 font-semibold md:text-base md:leading-6 ${
           isHighlighted ? "text-purple-600" : "text-slate-500"
         }`}
       >
@@ -64,11 +64,11 @@ export default function ReviewsRatingSummary({
         <div className="flex flex-col items-center gap-2 md:gap-3">
           <div className="flex flex-col items-center gap-2 md:gap-3">
             <div className="flex items-start gap-1.5">
-              <div className="text-[28px] font-bold leading-9 text-gray-900 md:text-[40px] md:leading-9">
+              <div className="text-[28px] leading-9 font-bold text-gray-900 md:text-[40px] md:leading-9">
                 {averageScore.toFixed(1)}
               </div>
               <div className="flex items-center pt-3">
-                <span className="text-sm font-normal leading-6 text-slate-500 md:text-base">
+                <span className="text-sm leading-6 font-normal text-slate-500 md:text-base">
                   (총 {totalReviews}명 참여)
                 </span>
               </div>
@@ -95,7 +95,7 @@ export default function ReviewsRatingSummary({
         <div className="w-full space-y-2 md:w-[337px]">
           {scoreBreakdown.map((item, index) => (
             <ScoreBar
-              key={item.score}
+              key={`score-${item.score}-${index}`}
               label={`${item.score}점`}
               count={item.count}
               total={totalReviews}
