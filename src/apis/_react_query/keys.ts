@@ -1,6 +1,7 @@
 // /src/apis/_rq/keys.ts
 
-// 규칙: [도메인, 세부키..., params?]
+import { GetGatheringsQuery } from "../gatherings/gatherings.schema";
+
 export const queryKeys = {
   auth: {
     all: () => ["auth"] as const,
@@ -19,14 +20,16 @@ export const queryKeys = {
     list: (params?: unknown) => [...queryKeys.reviews.all(), "list", params ?? {}] as const,
     scores: (params?: unknown) => [...queryKeys.reviews.all(), "scores", params ?? {}] as const,
   },
+  favorites: {
+    all: () => ["favorites"] as const,
+    list: (userId: number, query?: Partial<GetGatheringsQuery>) =>
+      ["favorites", userId, query] as const,
+  },
 } as const;
 
-// invalidate에 쓸 target 키 모음(여기서 확장해서 사용)
 export const targets = {
-  gatheringsAll: [
-    queryKeys.gatherings.all(),
-    // 하위 키들: list/joined/detail/participants
-  ],
-  reviewsAll: [queryKeys.reviews.all()],
   authAll: [queryKeys.auth.all()],
+  gatheringsAll: [queryKeys.gatherings.all()],
+  reviewsAll: [queryKeys.reviews.all()],
+  favoritesAll: [queryKeys.favorites.all()],
 };

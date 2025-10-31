@@ -1,6 +1,7 @@
 import Avatar, { type UserProfile } from "@/components/ui/Avatar";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 
 interface UserProfileProps {
   userProfile?: UserProfile;
@@ -43,13 +44,27 @@ interface ProfileDropdownProps {
 }
 
 function ProfileDropdown({ setIsProfileOpen, onLogout }: ProfileDropdownProps) {
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
   const handleLogout = () => {
     setIsProfileOpen(false);
     onLogout?.();
   };
 
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as HTMLElement)) {
+        setIsProfileOpen(false);
+      }
+    };
+    window.addEventListener("mousedown", handleClick);
+    return () => window.removeEventListener("mousedown", handleClick);
+  }, [dropdownRef, setIsProfileOpen]);
+
   return (
-    <div className="absolute right-0 z-50 mt-2 w-48 overflow-hidden rounded-md border border-gray-200 bg-white shadow-lg">
+    <div
+      className="absolute right-0 z-50 mt-2 w-48 overflow-hidden rounded-md border border-gray-200 bg-white shadow-lg"
+      ref={dropdownRef}
+    >
       <Link
         href="/my/bookings?profileEdit=true"
         className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100"
@@ -63,14 +78,14 @@ function ProfileDropdown({ setIsProfileOpen, onLogout }: ProfileDropdownProps) {
         className="block px-4 pt-3 pb-2 text-sm text-gray-700 hover:bg-gray-100"
         onClick={() => setIsProfileOpen(false)}
       >
-        참여 내역
+        내 모임
       </Link>
       <Link
         href="/my/reviews?writable=true"
         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
         onClick={() => setIsProfileOpen(false)}
       >
-        리뷰 작성
+        내 리뷰
       </Link>
       <Link
         href="/my/hosted"
@@ -79,7 +94,7 @@ function ProfileDropdown({ setIsProfileOpen, onLogout }: ProfileDropdownProps) {
       >
         내가 만든 모임
       </Link>
-      <hr className="h-2 border-y-1 border-slate-200 bg-slate-100" />
+      <hr className="h-2 border-y border-slate-200 bg-slate-100" />
       <button
         type="button"
         className="block w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-100"

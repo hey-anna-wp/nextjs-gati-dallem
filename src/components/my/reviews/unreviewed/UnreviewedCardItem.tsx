@@ -5,31 +5,18 @@ import { JoinedGathering } from "@/types";
 import { cn } from "@/utils/classNames";
 
 /** 마이페이지 나의 리뷰 - 작성 가능한 리뷰 카드 컴포넌트 */
-export default function UnreviewedCardItem({
-  id,
-  name,
-  image,
-  participantCount,
-  capacity,
-  dateTime,
-  location,
-}: JoinedGathering) {
+export default function UnreviewedCardItem(gathering: JoinedGathering) {
   return (
-    <Card meetingId={id}>
-      <Card.Image image={image ?? undefined} />
-      <Card.Detail>
-        <div className="flex h-full flex-col items-start justify-between gap-4">
-          <Card.Title>
-            <div className="flex gap-1.5 md:gap-2">{name}</div>
-          </Card.Title>
-          <div className="flex-between w-full flex-col gap-6 md:flex-row md:gap-3">
-            <Card.GatheringDetail {...{ participantCount, capacity, location, dateTime }} />
-            <Card.ReviewButton id={id} />
-          </div>
+    <Card gathering={gathering}>
+      <Card.Image />
+      <Card.Detail className="grid w-full items-stretch justify-stretch gap-4">
+        <Card.Title className="md:pr-12">{gathering.name}</Card.Title>
+        <div className="grid w-full items-end justify-stretch gap-6 md:grid-flow-col md:justify-between md:gap-3">
+          <Card.GatheringDetail />
+          <Card.ReviewButton />
         </div>
       </Card.Detail>
-      {/* TODO: 찜하기/취소 기능 구현 */}
-      {/* <Card.LikeButton /> */}
+      <Card.LikeButton />
     </Card>
   );
 }

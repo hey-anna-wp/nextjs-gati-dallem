@@ -5,30 +5,17 @@ import { Gathering } from "@/types";
 import { cn } from "@/utils/classNames";
 
 /** 마이페이지 내가 만든 모임 카드 컴포넌트 */
-export default function CreatedCardItem({
-  id,
-  name,
-  image,
-  participantCount,
-  capacity,
-  dateTime,
-  location,
-}: Gathering) {
+export default function CreatedCardItem(gathering: Gathering) {
   return (
-    <Card meetingId={id}>
-      <Card.Image image={image ?? undefined} />
-      <Card.Detail>
-        <div className="flex h-full flex-col items-start justify-between gap-4">
-          <Card.Title>
-            <div className="flex gap-1.5 md:gap-2">{name}</div>
-          </Card.Title>
-          <div className="flex-end md:flex-between flex-col gap-6 md:flex-row md:gap-3">
-            <Card.GatheringDetail {...{ participantCount, capacity, location, dateTime }} />
-          </div>
+    <Card gathering={gathering}>
+      <Card.Image />
+      <Card.Detail className="flex flex-col items-start justify-between gap-4">
+        <Card.Title className="md:pr-12">{gathering.name}</Card.Title>
+        <div className="flex-end md:flex-between flex-col gap-6 md:flex-row md:gap-3">
+          <Card.GatheringDetail />
         </div>
       </Card.Detail>
-      {/* TODO: 찜하기/취소 기능 구현 */}
-      {/* <Card.LikeButton /> */}
+      <Card.LikeButton />
     </Card>
   );
 }

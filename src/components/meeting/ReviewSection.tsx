@@ -1,9 +1,8 @@
-import { cn } from "@/lib/utils";
 import Avatar from "@/components/ui/Avatar";
-import { Card } from "@/components/common/Card";
 import Pagination from "@/components/ui/Pagination";
-import Image from "next/image";
+import { cn } from "@/lib/utils";
 import type { Review, ReviewList } from "@/types";
+import Image from "next/image";
 
 // 개별 리뷰 카드 컴포넌트
 interface ReviewCardProps {
@@ -26,15 +25,13 @@ function ReviewCard({ review, isLast }: ReviewCardProps) {
   };
 
   return (
-    <Card
+    <section
       className={cn(
         "w-full !max-w-full !min-w-0 !rounded-none !p-0",
         "hover:!shadow-none hover:!drop-shadow-none",
       )}
     >
-      <Card.Detail
-        className={cn("!rounded-none !p-0", !isLast && "mb-6 border-b border-gray-200 pb-6")}
-      >
+      <div className={cn("!rounded-none !p-0", !isLast && "mb-6 border-b border-gray-200 pb-6")}>
         <div className="flex items-start gap-4">
           {/* 사용자 프로필 */}
           <Avatar
@@ -82,8 +79,8 @@ function ReviewCard({ review, isLast }: ReviewCardProps) {
         >
           {review.comment}
         </p>
-      </Card.Detail>
-    </Card>
+      </div>
+    </section>
   );
 }
 

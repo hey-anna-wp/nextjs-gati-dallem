@@ -45,6 +45,4 @@ describe("마이페이지 - 나의 리뷰 - 작성 가능한 리뷰 카드 컴�
     expect(overlaySpy).toHaveBeenCalledTimes(1);
     expect(overlaySpy.mock.calls[0][0]).toBeTruthy();
   });
-
-  // TODO: 찜하기 버튼 렌더링
 });

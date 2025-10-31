@@ -5,40 +5,21 @@ import { JoinedGathering } from "@/types";
 import { cn } from "@/utils/classNames";
 
 /** 마이페이지 나의 모임 카드 컴포넌트 */
-export default function ReservedCardItem({
-  id,
-  name,
-  image,
-  participantCount,
-  capacity,
-  dateTime,
-  location,
-  isCompleted,
-  isReviewed,
-  canceledAt,
-}: JoinedGathering) {
+export default function ReservedCardItem(gathering: JoinedGathering) {
   return (
-    <Card meetingId={id}>
-      <Card.Image image={image ?? undefined} />
-      <Card.Detail>
-        <div className="flex flex-col gap-3.5 md:gap-4">
-          <Card.Tags
-            {...{ isCompleted, canceledAt }}
-            isConfirmed={isCompleted || participantCount >= 5}
-          />
-          <div className="flex flex-col items-start justify-between gap-4">
-            <Card.Title>
-              <div className="flex gap-1.5 md:gap-2">{name}</div>
-            </Card.Title>
-            <div className="flex-between flex-col items-center gap-6 md:w-full md:flex-row md:gap-3">
-              <Card.GatheringDetail {...{ participantCount, capacity, location, dateTime }} />
-              <Card.ReservedButton {...{ id, isCompleted, isReviewed }} />
-            </div>
-          </div>
+    <Card gathering={gathering}>
+      <Card.Image />
+      <Card.Detail className="grid w-full items-stretch justify-stretch gap-4">
+        <div className="grid gap-4">
+          <Card.Tags />
+          <Card.Title>{gathering.name}</Card.Title>
+        </div>
+        <div className="grid w-full items-end justify-stretch gap-6 md:grid-flow-col md:justify-between md:gap-3">
+          <Card.GatheringDetail />
+          <Card.ReservedButton />
         </div>
       </Card.Detail>
-      {/* TODO: 찜하기/취소 기능 구현 */}
-      {/* <Card.LikeButton /> */}
+      <Card.LikeButton />
     </Card>
   );
 }

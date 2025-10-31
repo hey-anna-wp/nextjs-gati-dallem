@@ -24,7 +24,7 @@ const meta = {
 ## 사용법
 \`\`\`tsx
 // 기본 배지
-<Badge count={5} size="small" />
+<Badge count={5} />
 
 // 큰 배지
 <Badge count={25} size="large" />
@@ -58,15 +58,6 @@ const meta = {
         defaultValue: { summary: "99" },
       },
     },
-    size: {
-      control: { type: "select" },
-      options: ["small", "large"],
-      description: "배지의 크기를 설정합니다. small은 작은 배지, large는 큰 배지입니다.",
-      table: {
-        type: { summary: '"small" | "large"' },
-        defaultValue: { summary: '"small"' },
-      },
-    },
     className: {
       control: { type: "text" },
       description:
@@ -86,7 +77,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     count: 5,
-    size: "small",
   },
   parameters: {
     docs: {
@@ -97,26 +87,10 @@ export const Default: Story = {
   },
 };
 
-// 큰 크기 배지
-export const Large: Story = {
-  args: {
-    count: 12,
-    size: "large",
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: "큰 크기의 배지입니다. 더 눈에 띄는 알림이나 중요한 카운트를 표시할 때 사용합니다.",
-      },
-    },
-  },
-};
-
 // 0개 (배지 숨김)
 export const Zero: Story = {
   args: {
     count: 0,
-    size: "small",
   },
   parameters: {
     docs: {
@@ -131,7 +105,6 @@ export const Zero: Story = {
 export const One: Story = {
   args: {
     count: 1,
-    size: "small",
   },
   parameters: {
     docs: {
@@ -146,7 +119,6 @@ export const One: Story = {
 export const MaxDisplay: Story = {
   args: {
     count: 99,
-    size: "small",
   },
   parameters: {
     docs: {
@@ -161,7 +133,6 @@ export const MaxDisplay: Story = {
 export const Overflow: Story = {
   args: {
     count: 100,
-    size: "small",
   },
   parameters: {
     docs: {
@@ -177,7 +148,6 @@ export const Overflow: Story = {
 export const Many: Story = {
   args: {
     count: 150,
-    size: "small",
   },
   parameters: {
     docs: {
@@ -193,7 +163,6 @@ export const CustomMax: Story = {
   args: {
     count: 75,
     maxCount: 50,
-    size: "small",
   },
   parameters: {
     docs: {
@@ -208,7 +177,6 @@ export const CustomMax: Story = {
 export const WithCustomStyle: Story = {
   args: {
     count: 8,
-    size: "small",
     className: "bg-red-500 text-white",
   },
   parameters: {
@@ -221,45 +189,19 @@ export const WithCustomStyle: Story = {
   },
 };
 
-// 크기 비교
-export const SizeComparison: Story = {
-  args: { count: 1 },
-  render: () => (
-    <div className="flex items-center gap-4">
-      <div className="text-center">
-        <Badge count={5} size="small" />
-        <p className="mt-2 text-xs">Small</p>
-      </div>
-      <div className="text-center">
-        <Badge count={5} size="large" />
-        <p className="mt-2 text-xs">Large</p>
-      </div>
-    </div>
-  ),
-
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Small과 Large 크기의 배지를 비교할 수 있습니다. 같은 숫자라도 크기에 따라 시각적 강조가 달라집니다.",
-      },
-    },
-  },
-};
-
 // 다양한 숫자 예시
 export const NumberExamples: Story = {
   args: { count: 1 },
   render: () => (
     <div className="flex flex-wrap gap-2">
-      <Badge count={1} size="small" />
-      <Badge count={5} size="small" />
-      <Badge count={12} size="small" />
-      <Badge count={25} size="small" />
-      <Badge count={50} size="small" />
-      <Badge count={99} size="small" />
-      <Badge count={100} size="small" />
-      <Badge count={150} size="small" />
+      <Badge count={1} />
+      <Badge count={5} />
+      <Badge count={12} />
+      <Badge count={25} />
+      <Badge count={50} />
+      <Badge count={99} />
+      <Badge count={100} />
+      <Badge count={150} />
     </div>
   ),
   parameters: {
@@ -267,31 +209,6 @@ export const NumberExamples: Story = {
       description: {
         story:
           "다양한 숫자 값의 배지 예시입니다. 1부터 150까지의 숫자가 어떻게 표시되는지 확인할 수 있습니다.",
-      },
-    },
-  },
-};
-
-// 큰 크기 다양한 숫자 예시
-export const LargeNumberExamples: Story = {
-  args: { count: 1 },
-  render: () => (
-    <div className="flex flex-wrap gap-2">
-      <Badge count={1} size="large" />
-      <Badge count={5} size="large" />
-      <Badge count={12} size="large" />
-      <Badge count={25} size="large" />
-      <Badge count={50} size="large" />
-      <Badge count={99} size="large" />
-      <Badge count={100} size="large" />
-      <Badge count={150} size="large" />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Large 크기의 다양한 숫자 배지 예시입니다. 큰 크기에서도 동일한 숫자 표시 규칙이 적용됩니다.",
       },
     },
   },

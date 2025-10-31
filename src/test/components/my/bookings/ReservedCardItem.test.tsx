@@ -120,7 +120,5 @@ describe("마이페이지 - 나의 모임 - 나의 모임 카드 컴포넌트 (R
       fireEvent.click(card);
       expect(pushSpy).toHaveBeenCalledTimes(1);
     });
-
-    // TODO: 찜하기 버튼 렌더링
   });
 });

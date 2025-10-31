@@ -22,15 +22,15 @@ type Story = StoryObj<typeof meta>;
  * - Card 컴포넌트의 요소: Image, Detail, Tags, Title, GatheringDetail ...
  */
 export const CustomCardExample: Story = {
-  render: () => {
-    const { name, image } = mockMyGathering[0];
+  args: { gathering: mockMyGathering[0] },
+  render: ({ gathering }) => {
     return (
-      <Card>
-        <Card.Image image={image ?? undefined} />
+      <Card gathering={gathering}>
+        <Card.Image />
         <Card.Detail>
           <div className="flex h-full flex-col items-start justify-between gap-4">
             <Card.Title>
-              <div className="flex gap-1.5 md:gap-2">{name}</div>
+              <div className="flex gap-1.5 md:gap-2">{gathering.name}</div>
             </Card.Title>
             <div className="flex-start gap-2">
               <ChipInfo>XX월 XX일</ChipInfo>
@@ -43,7 +43,7 @@ export const CustomCardExample: Story = {
             </div>
           </div>
         </Card.Detail>
-        <Card.LikeButton isLiked={true} />
+        <Card.LikeButton />
       </Card>
     );
   },

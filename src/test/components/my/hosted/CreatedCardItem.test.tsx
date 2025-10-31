@@ -41,6 +41,4 @@ describe("마이페이지 - 내가 만든 모임 - 내가 만든 모임 카드 �
     fireEvent.click(card);
     expect(pushSpy).toHaveBeenCalledTimes(1);
   });
-
-  // TODO: 찜하기 버튼 렌더링
 });

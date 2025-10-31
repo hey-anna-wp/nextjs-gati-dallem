@@ -1,8 +1,7 @@
-import { cn } from "@/lib/utils";
 import Avatar from "@/components/ui/Avatar";
+import Chip from "@/components/ui/Chip";
+import { cn } from "@/lib/utils";
 import { GatheringParticipant } from "@/types/gathering";
-import { Card } from "@/components/common/Card";
-import Chip, { AlarmTag, ChipInfo } from "@/components/ui/Chip";
 import Image from "next/image";
 
 interface ParticipantListProps {
@@ -21,13 +20,13 @@ export default function ParticipantList({
   const isConfirmed = participants.length >= 5; // 최소 5명 이상이면 개설확정
 
   return (
-    <Card
+    <section
       className={cn(
-        "border-color-purple-200 w-full !max-w-full !min-w-0 border bg-purple-100",
+        "w-full !max-w-full !min-w-0 rounded-4xl border border-purple-200 bg-purple-100",
         className,
       )}
     >
-      <Card.Detail className="bg-purple-100 px-10 pt-7 pb-[34px]">
+      <div className="px-10 pt-7 pb-[34px]">
         {/* 참가자 수와 개설확정 상태 */}
         <div className="flex-between mb-6">
           <div className="flex-start gap-3">
@@ -90,7 +89,7 @@ export default function ParticipantList({
             />
           </div>
         </div>
-      </Card.Detail>
-    </Card>
+      </div>
+    </section>
   );
 }

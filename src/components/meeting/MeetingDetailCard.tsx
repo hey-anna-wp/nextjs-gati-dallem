@@ -71,7 +71,7 @@ export default function MeetingDetailCard({
   };
 
   return (
-    <Card className={cn("w-full !max-w-full !min-w-0 !flex-none", className)}>
+    <Card gathering={gathering} className={cn("w-full !max-w-full !min-w-0 !flex-none", className)}>
       <Card.Detail className="flex-between flex h-full flex-col gap-6 p-3">
         {/* 상단 태그와 마감 정보 */}
         <div className="flex-between w-full">
