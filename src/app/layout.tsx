@@ -7,6 +7,7 @@ import Providers from "./providers";
 import MainNav from "@/layout/Header";
 import AppInitializer from "./AppInitializer";
 import GlobalAuthHydrator from "./GlobalAuthHydrator";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 export const metadata: Metadata = {
   title: {
@@ -43,6 +44,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {/* 메인이 남는 공간만 차지 = 헤더+푸터 있어도 100dvh 초과 안 함 */}
           <main className="min-h-0 flex-1">{children}</main>
         </Providers>
+        <div
+          id="global-loading"
+          className="fixed inset-0 z-[9999] hidden items-center justify-center bg-[var(--color-purple-50)]/40 backdrop-blur-[3px] transition-opacity duration-200"
+          role="status"
+        >
+          <LoadingSpinner />
+        </div>
       </body>
     </html>
   );

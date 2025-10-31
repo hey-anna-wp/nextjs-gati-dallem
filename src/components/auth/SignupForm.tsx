@@ -6,7 +6,7 @@ import Link from "next/link";
 import AuthInput from "./ui/AuthInput";
 import { AuthPasswordInput } from "./ui/AuthPasswordInput";
 import AuthButton from "./ui/AuthButton";
-import { useSignup } from "@/hooks/auths/useSignup";
+import { useSignup } from "@/apis/auths/auths.query";
 // import { toSafePath } from "@/utils/auth/safePath";
 import {
   // toUserErrorMessage,
@@ -17,6 +17,10 @@ import { AUTH_ERROR_MESSAGES } from "@/constants/auth/errorMessages";
 import { validateSignup, SignupFields as ValidationFields } from "@/utils/auth/validateSignup";
 import { EMAIL_REGEX, MIN_PASSWORD_LEN } from "@/constants/auth/constraints";
 import FormErrorBanner from "./ui/FormErrorBanner";
+import { useOverlay } from "@/hooks/useOverlay";
+import { useRouter } from "next/navigation";
+import { SignupBody } from "@/apis/auths/auths.schema";
+import SignupModal from "../common/SignupModal";
 
 type Props = { redirect?: string };
 
@@ -28,6 +32,9 @@ type FormFields = Omit<ValidationFields, "password" | "confirmPassword"> & {
 type SignupErrors = Partial<Record<keyof FormFields | "global", string>>;
 
 const SignupForm = ({ redirect = "/signin" }: Props) => {
+  const { overlay } = useOverlay();
+  const router = useRouter();
+
   const { mutateAsync: signupMutate, isPending } = useSignup();
 
   // form states
@@ -53,21 +60,18 @@ const SignupForm = ({ redirect = "/signin" }: Props) => {
   const isPwMatch = pw2.length > 0 && pw === pw2;
   const isPwStrongEnough = pw.length >= MIN_PASSWORD_LEN; // 필요시 강화 규칙 추가(영문/숫자/특수문자 등)
 
-  const canSubmit = useMemo(() => {
+  const isFormValid = useMemo(() => {
     const filled = !!(name.trim() && email.trim() && company.trim() && pw && pw2);
     const basicValid =
       EMAIL_REGEX.test(email.trim()) && pw.length >= MIN_PASSWORD_LEN && pw === pw2;
     return filled && basicValid && !isPending;
   }, [name, email, company, pw, pw2, isPending]);
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isPending) return;
 
-    // 에러 초기화
-    setErrors({});
-
-    // setServerMsg("");
+    setErrors({}); // 에러 초기화
 
     // 1) 클라이언트 선검증
     const vErrs = validateSignup({
@@ -92,15 +96,20 @@ const SignupForm = ({ redirect = "/signin" }: Props) => {
 
     // 2) API
     try {
-      const body = {
+      const body: SignupBody = {
         name: name.trim(),
         email: email.trim().toLowerCase(),
         companyName: company.trim(),
         password: pw,
       };
       await signupMutate(body);
-      // 성공 모달은 useSignup 내부에서 처리 중
-      // 필요 시: router.replace(redirect);
+      // 성공 시 모달 표시 후 redirect 경로로 이동
+      overlay(
+        <SignupModal
+          message={`"같이달램" 회원가입이 정상적으로 완료되었습니다.\n로그인 페이지로 이동합니다.`}
+          onConfirm={() => router.push(redirect)}
+        />,
+      );
     } catch (err) {
       // 서버 필드 에러 매핑(있으면)
       const { code, status, message } = toUserErrorDetails(err, "");
@@ -143,7 +152,7 @@ const SignupForm = ({ redirect = "/signin" }: Props) => {
 
   return (
     <form
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
       noValidate
       className="flex w-[680px] max-w-full flex-col gap-2 rounded-2xl bg-white pt-14 pr-11 pb-11 pl-14 shadow-sm [box-shadow:0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(16,24,40,0.08)]"
     >
@@ -212,7 +221,6 @@ const SignupForm = ({ redirect = "/signin" }: Props) => {
         onChange={(e) => handleChange("pw", e.target.value)}
         invalid={!!errors.pw}
         errorMessage={errors.pw}
-        aria-describedby="pw-error"
         autoComplete="new-password"
         className="bg-white ring-1 ring-slate-200 hover:ring-[#5865F2]/40 focus-visible:ring-2 focus-visible:ring-[#5865F2]"
       />
@@ -242,7 +250,7 @@ const SignupForm = ({ redirect = "/signin" }: Props) => {
         </p>
       )}
 
-      <AuthButton type="submit" disabled={!canSubmit} loading={isPending} className="mt-6">
+      <AuthButton type="submit" disabled={!isFormValid} loading={isPending} className="mt-6">
         회원가입
       </AuthButton>
 

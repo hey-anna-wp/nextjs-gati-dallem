@@ -58,3 +58,14 @@
     box-shadow: 0 0 30px rgb(88 101 242 / 0.6);
   }
 }
+
+@keyframes syncOpposite {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-8px);
+  }
+}

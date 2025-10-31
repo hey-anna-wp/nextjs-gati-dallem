@@ -53,10 +53,19 @@ export const useAuthStore = create<AuthState>()(
             }
             set((s) => ({ ...s, user: me, isAuthenticated: true }));
             await setCookie("loggedIn", new Date().getTime().toString());
-          } catch (e) {
+          } catch (e: unknown) {
             console.log(e);
+            // unknown → 안전 추출
+            const status =
+              (e as { status?: number })?.status ??
+              (e as { response?: { status?: number } })?.response?.status ??
+              (e as { cause?: { status?: number } })?.cause?.status;
 
-            await get().actions.clear();
+            if (status === 401) {
+              await get().actions.clear();
+            } else {
+              console.warn("[hydrateUser] non-401 error, keep token", e);
+            }
           }
         },
       },

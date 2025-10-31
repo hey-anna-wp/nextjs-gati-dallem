@@ -5,7 +5,7 @@ import { useMemo, useState, type FormEvent } from "react";
 import AuthInput from "./ui/AuthInput";
 import AuthButton from "./ui/AuthButton";
 import { AuthPasswordInput } from "./ui/AuthPasswordInput";
-import { useSignin } from "@/hooks/auths/useSignin";
+import { useSignin } from "@/apis/auths/auths.query";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toSafePath } from "@/utils/auth/safePath";
@@ -32,13 +32,13 @@ const LoginForm = ({ redirect = "/" }: Props) => {
   const [pwError, setPwError] = useState("");
   const [serverMsg, setServerMsg] = useState("");
 
-  const canSubmit = useMemo(() => {
+  const isFormValid = useMemo(() => {
     const filled = email.trim().length > 0 && pw.trim().length > 0;
     const validEmail = EMAIL_REGEX.test(email.trim());
     return filled && validEmail && !isPending;
   }, [email, pw, isPending]);
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isPending) return; // 중복 제출 방지
 
@@ -66,7 +66,7 @@ const LoginForm = ({ redirect = "/" }: Props) => {
 
   return (
     <form
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
       className={`flex w-[568px] max-w-full flex-col gap-2 rounded-2xl bg-white pt-14 pr-11 pb-11 pl-14 shadow-sm [box-shadow:0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(16,24,40,0.08)]`}
       noValidate // 브라우저 기본 검증 비활성 (커스텀 메시지 사용)
     >
@@ -121,7 +121,7 @@ const LoginForm = ({ redirect = "/" }: Props) => {
         </p>
       )}
 
-      <AuthButton type="submit" disabled={!canSubmit} className="mt-6">
+      <AuthButton type="submit" disabled={!isFormValid} className="mt-6">
         {isPending ? "로그인 중..." : "로그인"}
       </AuthButton>
       <p className="mt-3 text-center text-xs text-slate-500">

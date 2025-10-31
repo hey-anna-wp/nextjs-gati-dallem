@@ -7,8 +7,7 @@ import Logo from "@/components/header/Logo";
 import Navigation, { type NavigationItem } from "@/components/header/Navigation";
 import type { UserProfile } from "@/components/ui/Avatar";
 import AuthAction from "@/components/header/AuthAction";
-import { useAuthUser } from "@/hooks/auths/useAuthUser";
-import { useSignout } from "@/hooks/auths/useSignout";
+import { useAuthUser, useSignout } from "@/apis/auths/auths.query";
 import { useAuthToken } from "@/hooks/auths/useAuthToken";
 import { authQueryKeys } from "@/utils/auth/authQueryKeys";
 

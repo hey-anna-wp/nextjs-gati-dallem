@@ -7,16 +7,13 @@ import { queryKeys } from "@/apis/_react_query/keys";
  * - Query / Mutation 키 관리
  */
 
+type SessionState = "authed" | "guest";
+
 export const authQueryKeys = {
   // Query
   all: () => queryKeys.auth.all(),
   me: () => queryKeys.auth.me(),
-
-  /** @deprecated use authQueryKeys.me() instead */
-  /** @deprecated use "@/utils/auth/authQueryKeys" (authQueryKeys) */
-  user: () => authQueryKeys.me(),
-
-  // user: () => queryKeys.auth.me(),
+  meState: (state: SessionState) => [...queryKeys.auth.me(), state] as const,
 
   // Mutation
   mutation: {
@@ -25,3 +22,6 @@ export const authQueryKeys = {
     signup: () => [...authQueryKeys.all(), "mutation", "signup"] as const,
   },
 } as const;
+
+// authed 여부에 따라 meState 키 반환
+export const meKey = (authed: boolean) => authQueryKeys.meState(authed ? "authed" : "guest");

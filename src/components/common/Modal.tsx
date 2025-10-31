@@ -38,12 +38,12 @@ export default function Modal({
     </div>
   );
 }
-function ModalHeader({ children }: { children?: React.ReactNode }) {
+function ModalHeader({ children, onClose }: { children?: React.ReactNode; onClose?: () => void }) {
   const { close } = useOverlay();
   return (
     <div className="flex-between">
       <h2 className="text-lg font-semibold text-gray-900 md:text-2xl">{children}</h2>
-      <button className="cursor-pointer" onClick={close}>
+      <button className="cursor-pointer" onClick={onClose ?? close}>
         <Image src="/icon/delete.svg" width={24} height={24} alt="모달 닫기 버튼 이미지" />
       </button>
     </div>
