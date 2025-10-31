@@ -19,8 +19,25 @@ jobs:
         with:
           node-version: 22
 
+      - name: npm 캐시 설정
+        id: npm-cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: 캐시 상태 출력
+        run: |
+          if [[ "${{ steps.npm-cache.outputs.cache-hit }}" == 'true' ]]; then
+            echo "npm cache hit"
+          else
+            echo "npm cache miss"
+          fi
+
       - name: 의존성(라이브러리) 설치
-        run: npm ci
+        run: npm ci --prefer-offline
 
       - name: .env 파일 생성
         run: echo "${{ secrets.ENV }}" > .env
